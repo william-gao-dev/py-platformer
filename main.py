@@ -16,11 +16,18 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
+
     def new(self):
         # Start a new game
         self.all_sprites = pg.sprite.Group()
-        self.player = Player()
-        self.all_sprites.add(Player())
+        self.platforms = pg.sprite.Group()
+        self.player = Player(self)
+        self.all_sprites.add(self.player)
+        for platforms in PLATFORM_LIST:
+            p = Platform(*platforms) # Exploding a PLATFORM_LIST
+            self.all_sprites.add(p)
+            self.platforms.add(p)
+
         self.run()
 
     def run(self):
@@ -32,19 +39,43 @@ class Game:
             self.update()
             self.draw()
 
-
     def update(self):
         # Game Loop - Update
         self.all_sprites.update()
-
+        # check if player hits a platform - only if falling
+        if self.player.vel.y > 0:
+            hits = pg.sprite.spritecollide(self.player,self.platforms,False)
+            if hits:
+                self.player.pos.y = hits[0].rect.top
+                self.player.vel.y = 0
+        # If player reaches top quarter of the screen
+        if self.player.rect.top <= HEIGHT/4:
+            self.player.pos.y += abs(self.player.vel.y)
+            for plat in self.platforms:
+                plat.rect.y += abs(self.player.vel.y)
+                if plat.rect.top >= HEIGHT+5:
+                    plat.kill()
+        # spawn new platforms to keep same average number of platforms
+        while len(self.platforms) < 6:
+            width = random.randrange(50,100)
+            p = Platform(random.randrange(0,WIDTH-width),
+                        random.randrange(-75,-30),width,
+                        20)
+            self.platforms.add(p)
+            self.all_sprites.add(p)
 
     def events(self):
         # Game Loop - Events
         for event in pg.event.get():
+            print (event)
             # check for closing window
             if event.type == pg.QUIT:
                 self.playing = False
             self.running = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.player.jump()
+
 
     def draw(self):
         # Game Loop - Draw
