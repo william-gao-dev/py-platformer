@@ -10,6 +10,7 @@ FPS = 60
 PLAYER_ACC = .5
 PLAYER_FRICTION = -.12
 PLAYER_GRAVITY = 0.8
+PLAYER_JUMP = -20 # Velocity change on the negative Y axis on player jump event
 
 # Starting platforms
 PLATFORM_LIST = [
@@ -31,3 +32,5 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 YELLOW = (255,255,0)
+LIGHTBLUE = (0,155,155)
+BGCOLOR = LIGHTBLUE
