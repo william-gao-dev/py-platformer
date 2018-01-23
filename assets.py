@@ -4,3 +4,4 @@ from os import path
 
 FONT_NAME = 'arial' # Default font
 HIGHSCORE_FILE = 'highscore.txt' # Number will hold a high score
+SPRITESHEET = "spritesheet_jumper.png"
